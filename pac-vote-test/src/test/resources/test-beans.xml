@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+        xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+                      http://xmlns.jcp.org/xml/ns/javaee/beans_1_1.xsd"
+        bean-discovery-mode="all">
+
+	<decorators>
+		<class>com.prodyna.pac.vote.service.decorator.BallotServiceDecorator</class>
+		<class>com.prodyna.pac.vote.service.decorator.VoteServiceDecorator</class>
+		<class>com.prodyna.pac.vote.service.repo.decorator.VoteRepositoryDecorator</class>
+	</decorators>
+    <alternatives>
+        <class>com.prodyna.pac.vote.service.impl.MockTokenServiceImpl</class>
+        <class>com.prodyna.pac.vote.service.impl.MockUserValidationServiceImpl</class>
+        <class>com.prodyna.pac.vote.service.producer.MockAuthenticationFilter</class>
+    </alternatives>
+</beans>

@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS `vote`;
+DROP TABLE IF EXISTS `choice`;
+DROP TABLE IF EXISTS `ballot`;
+DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `hibernate_sequence`;

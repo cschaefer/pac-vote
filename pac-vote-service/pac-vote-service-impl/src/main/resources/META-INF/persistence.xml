@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://java.sun.com/xml/ns/persistence
+        http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+
+    <persistence-unit name="vote">
+        <jta-data-source>java:jboss/datasources/VoteDS</jta-data-source>
+        <class>com.prodyna.pac.vote.service.api.model.Ballot</class>
+        <class>com.prodyna.pac.vote.service.api.model.Choice</class>
+        <class>com.prodyna.pac.vote.service.api.model.User</class>
+        <class>com.prodyna.pac.vote.service.api.model.Vote</class>
+        <properties>
+             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="hibernate.show_sql" value="false"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>
+<!-- 
+
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+                                 http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+  version="2.1">
+
+  <persistence-unit name="vote" transaction-type="JTA">
+	 <provider>org.hibernate.ejb.HibernatePersistence</provider>
+     <jta-data-source>java:jboss/datasources/VoteDS</jta-data-source>
+     <class>com.prodyna.pac.vote.service.api.model.Ballot</class>
+     <class>com.prodyna.pac.vote.service.api.model.Choice</class>
+     <class>com.prodyna.pac.vote.service.api.model.User</class>
+     <class>com.prodyna.pac.vote.service.api.model.Vote</class>
+    <properties>
+        <property name="javax.persistence.schema-generation.database.action"
+                  value="drop-and-create"/>
+        <property name="javax.persistence.schema-generation.create-source"
+                  value="script"/>
+        <property name="javax.persistence.schema-generation.create-script-source"
+                  value="META-INF/sql/create.sql" />
+        <property name="javax.persistence.sql-load-script-source"
+                  value="META-INF/sql/data.sql" />
+        <property name="javax.persistence.schema-generation.drop-source"
+                  value="script" />
+        <property name="javax.persistence.schema-generation.drop-script-source"
+                  value="META-INF/sql/drop.sql" />
+    </properties>
+  </persistence-unit>
+  
+</persistence>
+
+ -->
