@@ -131,11 +131,133 @@ The MySQL driver can be deployed to Wildfly and configured in the [management co
 java:jboss/datasources/VoteDS
 ```
 
+### Application Properties
+
+The service relies on application properties being configured in the application server.  Making the file available can be done as follows:
+
+```
+$ ./bin/jboss-cli.sh --connect
+[standalone@localhost:9990 /] /system-property=application.properties:add(value=${jboss.server.config.dir}/application.properties)
+```
+
+This adds the following entry to the standalone.xml
+
+```
+<system-properties>
+    <property name="application.properties" value="${jboss.server.config.dir}/application.properties"/>
+</system-properties>
+```
+
+The following properties are supported
+```
+com.prodyna.pac.vote.server.oauth.protected.resource.url=<github url to retrieve authToken>
+```
+Deprecated - used for service side handling of third party OAuth providers.
+
+```
+com.prodyna.pac.vote.server.oauth.client.id=<github client key>
+```
+Deprecated - used for service side handling of third party OAuth providers.  The application key registered with the 3rd party OAuth provider.
+
+```
+com.prodyna.pac.vote.server.oauth.client.secret=<github client secret>
+```
+Deprecated - used for service side handling of third party OAuth providers.  The application secret registered with the 3rd party OAuth provider.
+
+```
+com.prodyna.pac.vote.server.oauth.callback.url=<service callback url>
+```
+Deprecated - used for service side handling of third party OAuth providers.  The application callback url to process the OAuth cycle with the 3rd party OAuth provider.
+
+```
+com.prodyna.pac.vote.application.private.key=<base64 encoded HmacSHA512 key>
+```
+Secret key for signing JWT (JSON web token).  The service expects a HmacSHA512 encode key which is then base64 encoded.
+
+```
+com.prodyna.pac.vote.oauth.github.api=<github api url>
+```
+The 3rd party OAuth2 provider URL for querying validity authTokens.
+
+```
+com.prodyna.pac.vote.oauth.client.id=<github client key>
+```
+The application key registered with the 3rd party OAuth provider.
+
+```
+com.prodyna.pac.vote.oauth.client.secret=<github client secret>
+```
+The application secret registered with the 3rd party OAuth provider.
+
+
 ## Development guide
 
+### Ground Rules
+1. All files are UTF-8 encoded.
+2. All code formatted.  See eclipse-cleanup-rules.xml and eclipse-format-rules.xml in **pac-vote**.
+3. All code compiles before git push.
+4. All test run in **pac-vote-test** before git push.
+5. Configuration must not be hard coded, rather captured in application.properties to allow for different environments.
+
+**pac-vote-service**
+
+**pac-vote-service-api**
+This contains all annotations, domain object, transfer objects, business exceptions and interfaces.  Internal and JAX-RS interfaces both belong in this module.
+
+JAX-RS service interfaces must apply the secured annotation, not the implementation.
+
+**pac-vote-service-impl**
+1. All implementations of JAX-RS services must be monitored using the monitored annotation.
+2. Logging should be avoided within the services, rather a decorator should be used, which can be disabled if necessary.
+3. Internal services are tested with Arquillian in container.
+
+**pac-vote-web**
+This module contains the end point for the JAX-RS.  All related additional REST services should fall under this endpoint /pac-vote/rest.
+
+**pac-vote-test**
+The JAX-RS are tested with Arquillian client tests.  Tests are currently run in fixed order to allow steping through various uses cases and edge cases.  Each test class should aim to encapulsate a set of related business functions forming a main use case with edge cases.
+
+The Arquillian RestEasy plugin is used to facilitate use of services.  Note that the test module contains some mock objects, such as for authentication.  When authentication headers are required refer to the mock implementation of the authentication filters and validation services.
+
+**pac-vote-assembly**
+The service and related artifacts for running a standalone voting service are found here.  As this JAX-RS is for many potential clients it must NOT contain a UI.  The reference UI for the voting service is found separate.
 
 ## Naming conventions
 
+The following naming conventions have been applied.
+
+**Classes**
+1. Service interfaces <FunctionalArea>Service
+2. Service implementations <FunctionArea>ServiceImpl
+3. Decorators <Service>Decorator
+4. Producers <Entity>Producer
+5. Filters <Purpose>Filter
+6. Tests <ClassName>Test
+
+
 ## Build Process
 
+mvn clean install from **pac-vote**
+
+This is also used by continuous integration.
+
 ## Release Management
+
+Daily builds from continuous integration or a developer workbench will generate SNAPSHOT versions.
+
+A functional release moves to the release version e.g
+0.0.1-SNAPSHOT becomes 0.0.1
+
+```
+mvn versions:set -DnewVersion=x.y.z
+
+```
+
+All modules in this repository move to the same version.
+
+A tag is applied to git for the released version.
+
+```
+git tag -a v[x.x] -m "my description"
+git push origin [vx.x]
+```
