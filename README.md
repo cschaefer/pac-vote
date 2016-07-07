@@ -243,10 +243,14 @@ This is also used by continuous integration.
 
 ## Release Management
 
-Daily builds from continuous integration or a developer workbench will generate SNAPSHOT versions.
+The git repository has two branches, a development and a master.
 
-A functional release moves to the release version e.g
-0.0.1-SNAPSHOT becomes 0.0.1
+Work is undertaken on the development branch.
+
+Daily builds from continuous integration or a developer workbench will generate SNAPSHOT versions.  
+
+A functional release moves to the release version e.g 0.0.1-SNAPSHOT becomes 0.0.1.  The release is merged into the master.  The next snapshot version is created in the pom.xmls and work continued on the development branch.
+
 
 ```
 mvn versions:set -DnewVersion=x.y.z
