@@ -18,6 +18,11 @@
             </includes>
         </dependencySet>
     </dependencySets>
-
+	<fileSets>
+        <fileSet>
+            <outputDirectory>pac/vote/resources</outputDirectory>
+            <directory>src/main/resources</directory>
+        </fileSet>
+    </fileSets>
 
 </assembly>
